@@ -1,0 +1,72 @@
+import type { Application, SystemHealthScore } from '../types/monitoring';
+
+export const mockApplications: Application[] = [
+  {
+    id: 'app-1',
+    name: 'Website API',
+    url: 'https://api.example.com/health',
+    description: 'Main public API for website',
+    checkInterval: 30,
+    timeoutThreshold: 5000,
+    warningThreshold: 500,
+    criticalThreshold: 2000,
+    status: 'Healthy',
+    lastResponseTime: 182,
+    uptime: 99.98,
+    lastChecked: new Date().toISOString(),
+    createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'app-2',
+    name: 'Payment API',
+    url: 'https://payments.example.com/health',
+    description: 'Stripe integration API',
+    checkInterval: 60,
+    timeoutThreshold: 10000,
+    warningThreshold: 1000,
+    criticalThreshold: 3000,
+    status: 'Degraded',
+    lastResponseTime: 1450,
+    uptime: 98.21,
+    lastChecked: new Date().toISOString(),
+    createdAt: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'app-3',
+    name: 'Auth Service',
+    url: 'https://auth.example.com/ping',
+    description: 'JWT Authentication service',
+    checkInterval: 30,
+    timeoutThreshold: 3000,
+    warningThreshold: 400,
+    criticalThreshold: 1000,
+    status: 'Healthy',
+    lastResponseTime: 240,
+    uptime: 99.91,
+    lastChecked: new Date().toISOString(),
+    createdAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'app-4',
+    name: 'Notification API',
+    url: 'https://notifications.example.com/status',
+    description: 'Push & Email notifications',
+    checkInterval: 120,
+    timeoutThreshold: 5000,
+    warningThreshold: 800,
+    criticalThreshold: 2000,
+    status: 'Down',
+    lastResponseTime: null,
+    uptime: 96.12,
+    lastChecked: new Date().toISOString(),
+    createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+  }
+];
+
+export const mockSystemHealth: SystemHealthScore = {
+  total: 94.8,
+  availability: 39.5,
+  performance: 23.2,
+  reliability: 19.1,
+  errorRate: 13.0
+};

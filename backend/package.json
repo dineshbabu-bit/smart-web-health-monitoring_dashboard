@@ -1,0 +1,36 @@
+{
+  "name": "smart-web-health-monitoring-backend",
+  "version": "1.0.0",
+  "description": "Node.js Express backend for Smart Web Application Health Monitoring with Google Lighthouse and Chrome Launcher",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/audit.test.js test/aiController.test.js",
+    "test:all": "node --test",
+    "test:integration": "node test/integration.js",
+    "test:verification": "node test/fullSystemVerification.js"
+  },
+  "keywords": [
+    "lighthouse",
+    "web-vitals",
+    "performance",
+    "health-monitoring",
+    "express",
+    "seo",
+    "accessibility"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^2.32.0",
+    "chrome-launcher": "^1.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "lighthouse": "^12.3.0",
+    "morgan": "^1.10.0"
+  }
+}
