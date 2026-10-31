@@ -4,13 +4,15 @@ services:
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
-    plan: starter
+    plan: free
     region: oregon
     branch: main
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=256"
       - key: CORS_ORIGIN
         value: "*"
       - key: LIGHTHOUSE_TIMEOUT_MS
@@ -18,6 +20,6 @@ services:
       - key: CHROME_PATH
         value: /usr/bin/chromium
       - key: CHROME_FLAGS
-        value: "--headless=new,--no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage,--disable-gpu,--ignore-certificate-errors,--no-first-run,--no-zygote,--js-flags=--max-old-space-size=256"
+        value: "--headless=new,--no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage,--disable-gpu,--ignore-certificate-errors,--no-first-run,--no-zygote,--disable-extensions,--disable-software-rasterizer,--js-flags=--max-old-space-size=256"
       - key: GEMINI_API_KEY
         sync: false
