@@ -1,7 +1,20 @@
 import axios, { AxiosError } from 'axios';
 
-// Canonical API Base URL - defaults to Vite proxy path '/api' in dev
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+// Canonical API Base URL - defaults to Vite proxy path '/api' in dev, or deployed backend in prod
+function getCanonicalBaseUrl(): string {
+  const envUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
+  if (!envUrl) return '/api';
+  if (envUrl.startsWith('http://') || envUrl.startsWith('https://')) {
+    const cleanUrl = envUrl.replace(/\/+$/, '');
+    if (!cleanUrl.endsWith('/api')) {
+      return `${cleanUrl}/api`;
+    }
+    return cleanUrl;
+  }
+  return envUrl;
+}
+
+const API_BASE_URL = getCanonicalBaseUrl();
 
 export interface ApiErrorResponse {
   success: boolean;

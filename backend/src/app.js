@@ -34,7 +34,28 @@ app.use(
       if (!origin || config.corsOrigin === '*') {
         return callback(null, true);
       }
-      if (allowedOrigins.has(origin) || /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      let originHostname = '';
+      try {
+        originHostname = new URL(origin).hostname;
+      } catch {
+        originHostname = origin;
+      }
+
+      // Check allowed origins set, localhost regex, Vercel/Render subdomains, or wildcard patterns
+      const isAllowed =
+        allowedOrigins.has(origin) ||
+        /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin) ||
+        originHostname.endsWith('.vercel.app') ||
+        originHostname.endsWith('.onrender.com') ||
+        customOrigins.some((pattern) => {
+          if (pattern.startsWith('*.')) {
+            const baseDomain = pattern.slice(2);
+            return originHostname === baseDomain || originHostname.endsWith(`.${baseDomain}`);
+          }
+          return pattern === origin;
+        });
+
+      if (isAllowed) {
         return callback(null, true);
       }
       return callback(new Error(`Origin ${origin} not allowed by CORS policy`));
@@ -67,19 +88,23 @@ app.get('/', (req, res) => {
   });
 });
 
-// Root /health endpoint alias
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'online',
-    service: 'Smart Web Application Health Monitoring API',
-    version: '1.0.0',
-    timestamp: new Date().toISOString()
-  });
+// Root /health endpoint alias (mirrors /api/health)
+app.use('/health', (req, res, next) => {
+  req.url = '/health';
+  apiRouter(req, res, next);
 });
 
-// API Routes (supports /api and handles duplicate /api/api gracefully)
+// API Routes (supports /api, /api/api, and direct root routing)
 app.use('/api', apiRouter);
 app.use('/api/api', apiRouter);
+app.use('/audit', (req, res, next) => {
+  req.url = `/audit${req.url}`;
+  apiRouter(req, res, next);
+});
+app.use('/ai', (req, res, next) => {
+  req.url = `/ai${req.url}`;
+  apiRouter(req, res, next);
+});
 
 // 404 handler
 app.use(notFoundHandler);
